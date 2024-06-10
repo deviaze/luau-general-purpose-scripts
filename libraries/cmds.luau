@@ -27,12 +27,31 @@ function cmds.ls(arg: string, get_raw: boolean?)
 	end
 end
 
-function cmds.exec(cmd: string)
-	local result = process.spawn(cmd, {}, {shell = true})
+function cmds.run(cmd: string, shell: string?)
+	local shell = shell or true
+	local result = process.spawn(cmd, {}, {shell = shell})
 	if result.ok then
 		return result.stdout:match(exclude_trailing_pattern) -- remove shell trailing whitespace
 	else
 		return `Error with executed program: {cmd}: ` .. tf(result.stderr)
 	end
 end
+
+function cmds.cls()
+	if process.exec then
+		if process.os == "windows" then
+			process.exec("cls")
+		else
+			process.exec('clear')
+		end
+	else
+		if process.os == "windows" then
+			process.spawn("cls", {}, {stdio = "forward"})
+		else
+			process.spawn("clear", {}, {stdio = "forward"})
+		end
+	end
+end
+cmds.clear = cmds.cls
+
 return cmds

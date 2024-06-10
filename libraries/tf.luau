@@ -194,14 +194,20 @@ function tf.run(t, to_stdout: boolean?, options: FormatOptions?)
 	end
 end
 
-function tf.ptf(t)
+function tf.ptf(t, ...)
 	print(tf.run(t, true))
+	local args = {...}
+	if args then
+		for _, val in args do
+			print(tf.run(val, true))
+		end
+	end
 end
 -- tf.run({
 -- 	["do something fun"] = function(x, y) return x + y end,
 -- 	[1] = "hehe mized table moment",
 -- 	[2] = false,
--- 	normal = 3,
+-- 	normal = 3,z e
 -- }, true)
 
 return tf.run, tf.ptf
